@@ -1,0 +1,7 @@
+﻿CREATE FUNCTION dbo.ufn_today( )
+RETURNS date
+AS
+BEGIN
+    RETURN DATEADD(day, DATEDIFF(day, 0, GETDATE()), 0);
+END
+GO
