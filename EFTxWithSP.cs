@@ -5,6 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using _20161125_EFTxWithSP.Models;
+using System.Configuration;
+using System.Data;
+using System.Data.Entity;
+using System.Data.SqlClient;
 
 namespace _20161125_EFTxWithSP
 {
@@ -116,7 +120,69 @@ namespace _20161125_EFTxWithSP
             }
         }
 
+        /// <summary>
+        /// 測試案例_4: 自行先建立 conn 及 tx 物件, 再建立 EF 的 context 物件; 再將 conn / tx 指派到 EF 的 context
+        /// </summary>
+        /// <remarks>
+        /// [探索3] 試一下 MSDN 的解法, 先以 ADO.NET 執行 Stored Procedure, 再執行 EF 的工作
+        /// https://msdn.microsoft.com/en-us/library/dn456843(v=vs.113).aspx
+        /// Database First 的 .edmx, 無法如同範例程式設定 conn 及 contextOwnsConnection; 只有 Code First 才能作到 !!
+        /// http://stackoverflow.com/questions/22102082/error-passing-existing-connections-to-dbcontext-constructor-when-using-database
+        /// </remarks>
+        public void CallSp_MSDN_02()
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["EFTestDB"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            {
+                conn.Open();
 
+                //using (var tx = conn.BeginTransaction(System.Data.IsolationLevel.Snapshot))
+                using (var tx = conn.BeginTransaction())
+                {
+                    var sqlCommand = new SqlCommand("usp_get_order_no");
+                    sqlCommand.Connection = conn;
+                    sqlCommand.Transaction = tx;
+                    sqlCommand.CommandType = CommandType.StoredProcedure;
+                    var orderno = new SqlParameter
+                    {
+                        ParameterName = "po_order_no",
+                        SqlDbType = SqlDbType.NVarChar,
+                        Size = 16,
+                        Direction = ParameterDirection.Output
+                    };
+                    sqlCommand.Parameters.Add(orderno);
+                    sqlCommand.ExecuteNonQuery();
+                    Console.WriteLine(orderno.Value);
 
-    }
-}
+                    //using (var db = new DbContext(conn, contextOwnsConnection: false))
+                    //{
+                    //    //EFTestDBEntities ctx = new EFTestDBEntities();
+                    //    //這裡產生的 ctx 是 null, 所以不能這樣作 !
+                    //    EFTestDBEntities ctx = db as EFTestDBEntities;
+                    //    ctx.MyOrders.Add(new MyOrder()
+                    //    {
+                    //        OrderNo = orderno.Value.ToString(),
+                    //        ShipName = "jasper",
+                    //        ShipAddress = "taipei",
+                    //        TotalAmt = 1000
+                    //    });
+                    //    //試一下 SaveChanges(), 再 RollbackTransaction(), 看一下結果
+                    //    try
+                    //    {
+                    //        ctx.SaveChanges();
+                    //        //tx.Commit();
+                    //        tx.Rollback();
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        tx.Rollback();
+                    //        Console.WriteLine(ex.ToString());
+                    //    }
+                    //}
+
+                }
+            }
+        }   //END method
+
+    }   //END Class
+}   //END namespace

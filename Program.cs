@@ -17,6 +17,8 @@ namespace _20161125_EFTxWithSP
             //obj.CallSpWithImplicitTx();
             Console.WriteLine("==== CallSpWithSameTxInContext ====");
             obj.CallSpWithSameTxInContext();
+            //Console.WriteLine("==== CallSp_MSDN_02 ====");
+            //obj.CallSp_MSDN_02();
         }
     }
 }
