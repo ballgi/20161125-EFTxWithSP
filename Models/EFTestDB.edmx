@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="EFTestDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="MyOrders">
+          <Key>
+            <PropertyRef Name="OrderNo" />
+          </Key>
+          <Property Name="OrderNo" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="ShipName" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="ShipAddress" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="TotalAmt" Type="decimal" Precision="10" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrderNoGenerator">
+          <Key>
+            <PropertyRef Name="OrderDate" />
+          </Key>
+          <Property Name="OrderDate" Type="date" Nullable="false" />
+          <Property Name="OrderSeq" Type="int" Nullable="false" />
+        </EntityType>
+        <Function Name="ufn_today" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="date" />
+        <Function Name="usp_get_order_no" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="po_order_no" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <EntityContainer Name="EFTestDBModelStoreContainer">
+          <EntitySet Name="MyOrders" EntityType="Self.MyOrders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderNoGenerator" EntityType="Self.OrderNoGenerator" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EFTestDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="MyOrder">
+          <Key>
+            <PropertyRef Name="OrderNo" />
+          </Key>
+          <Property Name="OrderNo" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ShipName" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ShipAddress" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TotalAmt" Type="Decimal" Precision="10" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrderNoGenerator">
+          <Key>
+            <PropertyRef Name="OrderDate" />
+          </Key>
+          <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="OrderSeq" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="EFTestDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="MyOrders" EntityType="Self.MyOrder" />
+          <EntitySet Name="OrderNoGenerators" EntityType="Self.OrderNoGenerator" />
+          <FunctionImport Name="usp_get_order_no">
+            <Parameter Name="po_order_no" Mode="InOut" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EFTestDBModelStoreContainer" CdmEntityContainer="EFTestDBEntities">
+          <EntitySetMapping Name="MyOrders">
+            <EntityTypeMapping TypeName="EFTestDBModel.MyOrder">
+              <MappingFragment StoreEntitySet="MyOrders">
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="ShipName" ColumnName="ShipName" />
+                <ScalarProperty Name="ShipAddress" ColumnName="ShipAddress" />
+                <ScalarProperty Name="TotalAmt" ColumnName="TotalAmt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderNoGenerators">
+            <EntityTypeMapping TypeName="EFTestDBModel.OrderNoGenerator">
+              <MappingFragment StoreEntitySet="OrderNoGenerator">
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="OrderSeq" ColumnName="OrderSeq" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_get_order_no" FunctionName="EFTestDBModel.Store.usp_get_order_no" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="無" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

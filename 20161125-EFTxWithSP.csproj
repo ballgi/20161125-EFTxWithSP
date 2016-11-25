@@ -48,8 +48,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,13 +69,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\EFTestDB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EFTestDB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EFTestDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EFTestDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EFTestDB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EFTestDB.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MyOrder.cs">
+      <DependentUpon>EFTestDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OrderNoGenerator.cs">
+      <DependentUpon>EFTestDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EntityDeploy Include="Models\EFTestDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>EFTestDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Models\EFTestDB.edmx.diagram">
+      <DependentUpon>EFTestDB.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\EFTestDB.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -72,6 +114,16 @@
     <Content Include="App_Data\EFTestDB_log.ldf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>EFTestDB.mdf</DependentUpon>
+    </Content>
+    <Content Include="Models\EFTestDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EFTestDB.edmx</DependentUpon>
+      <LastGenOutput>EFTestDB.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\EFTestDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>EFTestDB.edmx</DependentUpon>
+      <LastGenOutput>EFTestDB.cs</LastGenOutput>
     </Content>
     <Content Include="Sql Scripts\Functions\ufn_today.sql" />
     <Content Include="Sql Scripts\Stored Procedures\test_get_order_no.sql" />
