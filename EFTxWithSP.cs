@@ -73,6 +73,50 @@ namespace _20161125_EFTxWithSP
             }
         }
 
+        /// <summary>
+        /// Stored Procedure 與 EF Context 在相同的 Transaction
+        /// 利用 EF 建立的 context 物件, 去產生 connection / transaction
+        /// </summary>
+        /// <remarks>
+        /// [探索2] 試一下 MSDN 的解法, EF 6.X 以後, 可自行控制 TRANSACTION, 可以解決
+        /// https://msdn.microsoft.com/en-us/library/dn456843(v=vs.113).aspx
+        /// 注意: using (MyDBEntities ctx = new MyDBEntities()) 還沒有 open connection
+        /// 注意: using (var tx = ctx.Database.BeginTransaction()) 會先 open connection 至 DB, 再 BEGIN TX
+        /// </remarks>
+        public void CallSpWithSameTxInContext()
+        {
+            using (EFTestDBEntities ctx = new EFTestDBEntities())
+            {
+                using (var tx = ctx.Database.BeginTransaction())
+                {
+                    ObjectParameter orderno = new ObjectParameter("po_order_no", typeof(String));
+                    ctx.usp_get_order_no(orderno);
+                    Console.WriteLine(orderno.Value);
+
+                    ctx.MyOrders.Add(new MyOrder()
+                    {
+                        OrderNo = orderno.Value.ToString(),
+                        ShipName = "jasper",
+                        ShipAddress = "taipei",
+                        TotalAmt = 1000
+                    });
+                    //試一下 SaveChanges(), 再 RollbackTransaction(), 看一下結果
+                    try
+                    {
+                        ctx.SaveChanges();
+                        //tx.Commit();
+                        tx.Rollback();
+                    }
+                    catch (Exception ex)
+                    {
+                        tx.Rollback();
+                        Console.WriteLine(ex.ToString());
+                    }
+                }
+            }
+        }
+
+
 
     }
 }
