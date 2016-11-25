@@ -11,8 +11,10 @@ namespace _20161125_EFTxWithSP
         static void Main(string[] args)
         {
             EFTxWithSP obj = new EFTxWithSP();
-            Console.WriteLine("==== CallSPinExplicitTx ====");
-            obj.CallSPinExplicitTx();
+            //Console.WriteLine("==== CallSPinExplicitTx ====");
+            //obj.CallSpWithExplicitTx();
+            Console.WriteLine("==== CallSpWithImplicitTx ====");
+            obj.CallSpWithImplicitTx();
         }
     }
 }
